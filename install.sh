@@ -189,11 +189,7 @@ do
 		else
 			echo "Great, no addtionnal packages to install"
 		fi
-		checkbr
-		if [ `checkbr` -eq 1 ]
-		then
-			configureNetwork
-		fi
+		configureNetwork
 		;;
 	esac
 done
