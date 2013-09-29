@@ -13,7 +13,7 @@ function checkInstall() {
 	rougefonce='\e[0;31m'
 	vertclair='\e[1;32m'
 
-	for i in aptitude lxc bridge-utils
+	for i in aptitude lxc bridge-utils ipcalc
 	do
 		package=`dpkg -l | grep ii.*$i`
 		if [ ! -z "$package" ]
@@ -59,21 +59,7 @@ function usage() {
 	echo to do
 }
 
-function checkbr(){
-	interface="/etc/network/interfaces"
-
-	interbr0=`cat $interface | grep br0 | head -n 1 `
-	interbr1=`cat $interface | grep br1 | head -n 1 `
-
-	if [ ! -z "$interbr0" ] && [ ! -z "$interbr1" ]
-	then
-		echo 0
-	else
-		echo 1
-	fi
-}
-
-#Cette fonciton permet de verifier la presence de
+#Cette fonction permet de verifier la presence de
 #br0 ou br1 . elle renvoie
 #0 si les 2 sont presents
 #1 si br0 est present
