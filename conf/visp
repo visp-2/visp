@@ -1,0 +1,3 @@
+# Change this option to set where is installed 
+# administration scripts
+binary path = /opt/visp/bin
