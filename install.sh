@@ -1,4 +1,5 @@
-#!/bin/bash -x
+#!/bin/bash
+
 
 
 # Cette fonction permet de vérifier si une commande 
@@ -107,6 +108,18 @@ function configureNetwork() {
 
         ipbr0=`echo $netbr0 | awk -F \/ {'print$1'}`
         maskbr0=`ipcalc $netbr0 | grep Netmask | awk {'print$2'}`
+	
+
+	# Check if the provided addresses are valid
+	if [ "`ipcalc $netbr0 | head -n1 | awk {'print$1'}`" == "INVALID" ]
+	then
+		echo "Invalid address for br0"
+		exit 1
+	elif [ "`ipcalc $netbr1 | head -n1 | awk {'print$1'}`" == "INVALID" ] 
+	then
+		echo "Invalid address for br1"
+		exit 1 
+	fi
 
         ipbr1=`echo $netbr1 | awk -F \/ {'print$1'}`
         maskbr1=`ipcalc $netbr1 | grep Netmask | awk {'print$2'}`
@@ -144,6 +157,20 @@ EOF
 
         ifdown br0 > /dev/null 2>&1
         ifdown br1 > /dev/null 2>&1
+
+
+	# Check if br0 or br1 already exists
+	for i in 0 1
+	do
+		exist=`brctl show | grep br$i`
+	
+		if [ ! -z "$exist" ]
+		then
+			ip link set br$i down
+			brctl delbr br$i
+		fi
+	done
+
         ifup br0
         ifup br1
 
@@ -193,20 +220,4 @@ do
 		;;
 	esac
 done
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
