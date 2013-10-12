@@ -1,7 +1,5 @@
 #!/bin/bash
 
-
-
 # Cette fonction permet de vérifier si une commande 
 # ou un paquet existe sur le système. Elle fait une 
 # vérification complète des composant nécessaire mais 
@@ -200,19 +198,23 @@ function installCgroup() {
 
 	cgroupFstab=`grep cgroup /etc/fstab`
 
-	if [ -z cgroupFstab ]
+	if [ -z "$cgroupFstab" ]
 	then
 		cat << EOF >> /etc/fstab
 
 cgroup		/sys/fs/cgroup	cgroup	defaults	0	0
 
 EOF
-		mount cgroup
-
-		if [ $? -ne 0 ]
+		cgroupMount=`mount | grep cgroup`
+		if [ -z $cgroupMount ]
 		then
-			echo "Cannot mount cgroup"
-			exit 1
+			mount cgroup
+
+			if [ $? -ne 0 ]
+			then
+				echo "Cannot mount cgroup"
+				exit 1
+			fi
 		fi
 	fi
 	
@@ -237,23 +239,30 @@ function installTemplate() {
 				read -p "Type yes or no " yes
 			elif [ "$yes" == "yes" ]
 			then
-				rm -rf /var/lib/lxc/template
-				lxc-create -n template -t debian
-			
-				sed -i "s/IPV4/$ipTemplate\/24/g" /var/lib/lxc/template/config
-
-				sed -i "s/GW/$ipbr0/g" /var/lib/lxc/template/config
-				
+				createTemplate
 				break
 			elif [ "$yes" == "no" ]
 			then
-				echo no
+				echo "Ok. We will keep your template"
 				break
 			fi
 		done
+	else
+		createTemplate
 	fi
 
 }
+
+function createTemplate() {
+	rm -rf /var/lib/lxc/template
+	lxc-create -n template -t debian
+
+	sed -i "s/IPV4/$ipTemplate\/24/g" /var/lib/lxc/template/config
+	sed -i "s/GW/$ipbr0/g" /var/lib/lxc/template/config
+}
+				
+function customizeTemplate() {
+	lxc-start -d -n
 
 
 if [ $# -lt 1 ]
@@ -281,6 +290,7 @@ do
 		configureNetwork
 		installCgroup
 		installTemplate
+		customizeTemplate
 		;;
 	esac
 done
