@@ -68,7 +68,7 @@ auto lo
 iface lo inet loopback
 
 auto eth0
-iface eth0 inet dhcp
+iface eth0 inet static
 EOF
 
     # set the hostname
@@ -114,6 +114,11 @@ isc-dhcp-client,\
 netbase,\
 net-tools,\
 iproute,\
+vim,\
+tmux,\
+aptitude,\
+iputils-ping,\
+bash-completion,\
 openssh-server
 
     cache=$1
@@ -207,6 +212,12 @@ copy_configuration()
 lxc.tty = 4
 lxc.pts = 1024
 lxc.utsname = $hostname
+
+lxc.network.type		= veth
+lxc.network.link		= br0
+lxc.network.flags		= up
+lxc.network.ipv4		= IPV4
+lxc.network.ipv4.gateway	= GW
 
 # When using LXC with apparmor, uncomment the next line to run unconfined:
 #lxc.aa_profile = unconfined

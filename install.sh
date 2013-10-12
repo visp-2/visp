@@ -240,11 +240,9 @@ function installTemplate() {
 				rm -rf /var/lib/lxc/template
 				lxc-create -n template -t debian
 			
-				sed -i "s/IPV4/$ipTemplate/g" /var/lib/lxc/template/config
-				sed -i "s/IPV4/$ipTemplate/g" /var/lib/lxc/template/rootfs/etc/network/interfaces
+				sed -i "s/IPV4/$ipTemplate\/24/g" /var/lib/lxc/template/config
 
 				sed -i "s/GW/$ipbr0/g" /var/lib/lxc/template/config
-				sed -i "s/GW/$iipbr0/g" /var/lib/lxc/template/rootfs/etc/network/interfaces
 				
 				break
 			elif [ "$yes" == "no" ]
