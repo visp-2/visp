@@ -101,28 +101,30 @@ function suppbr(){
 function configureNetwork() {
 
         echo "IP Address for administration network (brO)"
-        read -p "Ex: 192.168.1.1/24 : " netbr0
+        read -p "Ex: 192.168.1.1/24 : " ipbr0
 
         echo "IP Address for clients network (br1)"
-        read -p "Ex: 192.168.2.1/16 : " netbr1
+        read -p "Ex: 192.168.2.1/16 : " ipbr1
 
-        ipbr0=`echo $netbr0 | awk -F \/ {'print$1'}`
-        maskbr0=`ipcalc $netbr0 | grep Netmask | awk {'print$2'}`
+        ipbr0=`echo $ipbr0 | awk -F \/ {'print$1'}`
+        maskbr0=`ipcalc $ipbr0 | grep Netmask | awk {'print$2'}`
+	netbr0=`ipcalc $ipbr0 | grep Network | awk {'print$2'} | awk -F / {'print$1'}`
 	
+        ipbr1=`echo $ipbr1 | awk -F \/ {'print$1'}`
+        maskbr1=`ipcalc $ipbr1 | grep Netmask | awk {'print$2'}`
+	netbr1=`ipcalc $ipbr1 | grep Network | awk {'print$2'} | awk -F / {'print$1'}`
+
 
 	# Check if the provided addresses are valid
-	if [ "`ipcalc $netbr0 | head -n1 | awk {'print$1'}`" == "INVALID" ]
+	if [ "`ipcalc $ipbr0 | head -n1 | awk {'print$1'}`" == "INVALID" ]
 	then
 		echo "Invalid address for br0"
 		exit 1
-	elif [ "`ipcalc $netbr1 | head -n1 | awk {'print$1'}`" == "INVALID" ] 
+	elif [ "`ipcalc $ipbr1 | head -n1 | awk {'print$1'}`" == "INVALID" ] 
 	then
 		echo "Invalid address for br1"
 		exit 1 
 	fi
-
-        ipbr1=`echo $netbr1 | awk -F \/ {'print$1'}`
-        maskbr1=`ipcalc $netbr1 | grep Netmask | awk {'print$2'}`
 
         check=`checkbr`
         case $check in
@@ -194,6 +196,68 @@ EOF
 
 }
 
+function installCgroup() {
+
+	cgroupFstab=`grep cgroup /etc/fstab`
+
+	if [ -z cgroupFstab ]
+	then
+		cat << EOF >> /etc/fstab
+
+cgroup		/sys/fs/cgroup	cgroup	defaults	0	0
+
+EOF
+		mount cgroup
+
+		if [ $? -ne 0 ]
+		then
+			echo "Cannot mount cgroup"
+			exit 1
+		fi
+	fi
+	
+}
+
+function installTemplate() {
+
+	ipTemplate=`echo $netbr0 | sed "s/0/253/g"`
+
+	cp scripts/lxc-debian /usr/share/lxc/templates
+
+	if [ -d /var/lib/lxc/template ]
+	then
+		read -p "The template already exist. Do you want to remove it? (yes/no) " yes
+
+		while true
+		do
+
+			
+			if [ -z "$yes" ]
+			then
+				read -p "Type yes or no " yes
+			elif [ "$yes" == "yes" ]
+			then
+				rm -rf /var/lib/lxc/template
+				lxc-create -n template -t debian
+			
+				sed -i "s/IPV4/$ipTemplate/g" /var/lib/lxc/template/config
+				sed -i "s/IPV4/$ipTemplate/g" /var/lib/lxc/template/rootfs/etc/network/interfaces
+
+				sed -i "s/GW/$ipbr0/g" /var/lib/lxc/template/config
+				sed -i "s/GW/$iipbr0/g" /var/lib/lxc/template/rootfs/etc/network/interfaces
+				
+				break
+			elif [ "$yes" == "no" ]
+			then
+				echo no
+				break
+			fi
+		done
+	fi
+
+}
+
+
 if [ $# -lt 1 ]
 then
 	usage
@@ -217,6 +281,8 @@ do
 			echo "Great, no addtionnal packages to install"
 		fi
 		configureNetwork
+		installCgroup
+		installTemplate
 		;;
 	esac
 done
