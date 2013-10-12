@@ -263,7 +263,7 @@ function createTemplate() {
 				
 function customizeTemplate() {
 	lxc-start -d -n
-
+}
 
 if [ $# -lt 1 ]
 then
