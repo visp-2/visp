@@ -255,14 +255,18 @@ function installTemplate() {
 
 function createTemplate() {
 	rm -rf /var/lib/lxc/template
-	lxc-create -n template -t debian
+	
+	echo ""
+	echo "Creating Template ..."
+	lxc-create -n template -t debian > /dev/null 2>&1
+	echo "Template Configured"
 
 	sed -i "s/IPV4/$ipTemplate\/24/g" /var/lib/lxc/template/config
 	sed -i "s/GW/$ipbr0/g" /var/lib/lxc/template/config
 }
 				
 function customizeTemplate() {
-	lxc-start -d -n
+	lxc-start -d -n template
 }
 
 if [ $# -lt 1 ]
