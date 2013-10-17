@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash 
 
 # Cette fonction permet de vérifier si une commande 
 # ou un paquet existe sur le système. Elle fait une 
@@ -191,6 +191,36 @@ EOF
                 echo there is some trouble for br1
                 exit 1
         fi
+}
+
+function configureNatForward() {
+
+	# add ip_forward and nat to rc.local
+	
+	# create exitLine to known the line number of "exit 0" 
+	exitLine=$(grep -n "exit 0" /etc/rc.local | awk {'print$1'} | cut -d : -f 1)
+
+	if [ -z $exitLine ]
+	then
+
+		cat << EOF >> /etc/rc.local
+
+echo 1 > /proc/sys/net/ipv4/ip_forward
+iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+
+exit 0
+EOF
+	else
+			
+		sed -i "${exitLine}d" /etc/rc.local
+		cat << EOF >> /etc/rc.local
+
+echo 1 > /proc/sys/net/ipv4/ip_forward
+iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+
+exit 0
+EOF
+	fi
 
 }
 
@@ -217,6 +247,14 @@ EOF
 			fi
 		fi
 	fi
+
+	cat << EOF >> /etc/rc.local
+
+echo 1 > /proc/sys/net/ipv4/ip_forward
+iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+
+exit 0
+EOF
 	
 }
 
@@ -224,11 +262,11 @@ function installTemplate() {
 
 	ipTemplate=`echo $netbr0 | sed "s/0/253/g"`
 
-	cp scripts/lxc-debian /usr/share/lxc/templates
+	cp scripts/lxc-debian /usr/share/lxc/template-clients
 
-	if [ -d /var/lib/lxc/template ]
+	if [ -d /var/lib/lxc/template-client ]
 	then
-		read -p "The template already exist. Do you want to remove it? (yes/no) " yes
+		read -p "The template-client already exist. Do you want to remove it? (yes/no) " yes
 
 		while true
 		do
@@ -243,7 +281,7 @@ function installTemplate() {
 				break
 			elif [ "$yes" == "no" ]
 			then
-				echo "Ok. We will keep your template"
+				echo "Ok. We will keep your template-client"
 				break
 			fi
 		done
@@ -254,19 +292,40 @@ function installTemplate() {
 }
 
 function createTemplate() {
-	rm -rf /var/lib/lxc/template
+	rm -rf /var/lib/lxc/template-client
 	
 	echo ""
 	echo "Creating Template ..."
-	lxc-create -n template -t debian > /dev/null 2>&1
+	lxc-create -n template-client -t debian > /dev/null 2>&1
 	echo "Template Configured"
 
-	sed -i "s/IPV4/$ipTemplate\/24/g" /var/lib/lxc/template/config
-	sed -i "s/GW/$ipbr0/g" /var/lib/lxc/template/config
+	sed -i "s/IPV4/$ipTemplate\/24/g" /var/lib/lxc/template-client/config
+	sed -i "s/GW/$ipbr0/g" /var/lib/lxc/template-client/config
 }
 				
 function customizeTemplate() {
-	lxc-start -d -n template
+
+	# create a rsa key for ssh to be able to execute some
+	# command on the VE
+	rm -rf /etc/lxc/ssh/*
+	mkdir /etc/lxc/ssh
+	chmod 600 /etc/lxc/ssh/
+	ssh-keygen -t rsa -N "" -f /etc/lxc/ssh/id_rsa-lxc > /dev/null
+	
+	mkdir /var/lib/lxc/template-client/rootfs/root/.ssh
+	cp /etc/lxc/ssh/id_rsa-lxc.pub /var/lib/lxc/template-client/rootfs/root/.ssh/authorized_keys
+
+
+	# install or configure some stuff
+	
+
+
+	# Create archive
+	cd /var/lib/lxc/
+	tar -cf template-client.tar template-client
+	md5sum template-client.tar > template-client.md5
+	rm -rf template-client
+	
 }
 
 if [ $# -lt 1 ]
@@ -292,6 +351,7 @@ do
 			echo "Great, no addtionnal packages to install"
 		fi
 		configureNetwork
+		configureNatForward
 		installCgroup
 		installTemplate
 		customizeTemplate
