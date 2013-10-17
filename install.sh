@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash
 
 # Cette fonction permet de vérifier si une commande 
 # ou un paquet existe sur le système. Elle fait une 
@@ -199,8 +199,14 @@ function configureNatForward() {
 	
 	# create exitLine to known the line number of "exit 0" 
 	exitLine=$(grep -n "exit 0" /etc/rc.local | awk {'print$1'} | cut -d : -f 1)
+	natForward=$(grep -e "ip_forward" -e POSTROUTING /etc/rc.local)
 
-	if [ -z $exitLine ]
+	if [ ! -z "$natForward" ]
+	then
+		return
+	fi
+	
+	if [ -z "$exitLine" ]
 	then
 
 		cat << EOF >> /etc/rc.local
@@ -307,7 +313,7 @@ function customizeTemplate() {
 
 	# create a rsa key for ssh to be able to execute some
 	# command on the VE
-	rm -rf /etc/lxc/ssh/*
+	rm -rf /etc/lxc/ssh/
 	mkdir /etc/lxc/ssh
 	chmod 600 /etc/lxc/ssh/
 	ssh-keygen -t rsa -N "" -f /etc/lxc/ssh/id_rsa-lxc > /dev/null
@@ -315,15 +321,17 @@ function customizeTemplate() {
 	mkdir /var/lib/lxc/template-client/rootfs/root/.ssh
 	cp /etc/lxc/ssh/id_rsa-lxc.pub /var/lib/lxc/template-client/rootfs/root/.ssh/authorized_keys
 
+	lxc-start -d -n template-client
 
 	# install or configure some stuff
-	
+	ssh -o StrictHostKeyChecking=no -i /etc/lxc/ssh/id_rsa-lxc root@172.16.1.253 "ls -la /root"
 
 
 	# Create archive
 	cd /var/lib/lxc/
 	tar -cf template-client.tar template-client
 	md5sum template-client.tar > template-client.md5
+	lxc-stop -n template-client
 	rm -rf template-client
 	
 }
