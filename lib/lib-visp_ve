@@ -1,5 +1,5 @@
 function execSsh() {
-	ssh -o StrictHostKeyChecking=no -i /etc/lxc/ssh/id_rsa-lxc root@172.16.1.$2 "$1"
+	ssh -q -o StrictHostKeyChecking=no -i /etc/lxc/ssh/id_rsa-lxc root@172.16.1.$2 "$1"
 }
  
 
@@ -18,20 +18,21 @@ function createVe(){
 		sed -i "s/172.16.1.253/172.16.1.$cpt/g" /var/lib/lxc/$i/config
 		ln -s /var/lib/lxc/$i/config /etc/lxc/auto/$i
 		lxc-start -n $i -d
-		ping -c 1 -W 1 172.16.1.$cpt
+		sleep 2
+		ping -c 1 -W 1 172.16.1.$cpt > /dev/null
 		if [ $? -eq 0 ]
 		then
 			echo -e " $i network ${vertclair}OK${neutre}"
 		else
-			echo -e "$i NETWORK ${rougefonce}NOK${neutre}"
+			echo -e "$i network ${rougefonce}NOK${neutre}"
 		fi
 	
-		scp ./script/customize-ve.sh root@172.16.1.$cpt:/usr/sbin
+		scp -o StrictHostKeyChecking=no -i /etc/lxc/ssh/id_rsa-lxc ./scripts/customize-ve.sh root@172.16.1.$cpt:/usr/sbin
 		case $cpt in
-			1)execSsh "chmod u+x /usr/sbin; /usr/sbin/customize-ve.sh -a $cpt";;
-			2)execSsh "chmod u+x /usr/sbin; /usr/sbin/customize-ve.sh -m $cpt";;
-			3)execSsh "chmod u+x /usr/sbin; /usr/sbin/customize-ve.sh -M $cpt";;
-			4)execSsh "chmod u+x /usr/sbin; /usr/sbin/customize-ve.sh -d $cpt";;
+			1)execSsh "chmod u+x /usr/sbin; /usr/sbin/customize-ve.sh -a" $cpt;;
+			2)execSsh "chmod u+x /usr/sbin; /usr/sbin/customize-ve.sh -m" $cpt;;
+			3)execSsh "chmod u+x /usr/sbin; /usr/sbin/customize-ve.sh -M" $cpt;;
+			4)execSsh "chmod u+x /usr/sbin; /usr/sbin/customize-ve.sh -d" $cpt;;
 		esac
 	
 	let cpt+=1
