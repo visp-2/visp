@@ -1,9 +1,9 @@
-#!/bin/bash -x
+#!/bin/bash 
 
 
 . ./lib/lib-visp_install
 . ./lib/lib-visp_lxc
-#. ./lib/lib-visp_template
+. ./lib/lib-visp_ve
 
 
 while getopts "ci" opt
@@ -26,7 +26,6 @@ do
 		installCgroup
 		installTemplate
 		installSsh
-		#customizeTemplate
 		;;
 	esac
 done

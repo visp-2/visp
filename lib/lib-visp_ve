@@ -1,9 +1,18 @@
+function execSsh() {
+	ssh -o StrictHostKeyChecking=no -i /etc/lxc/ssh/id_rsa-lxc root@172.16.1.253 "$1"
+}
+ 
 
 function creatVe(){
 	
+	lxc-stop -n template-client
+
 	for i in apache mysql mail dns
 	do
+		cpt=1
 		lxc-clone -o template-client -n $i
-		
+		sed -i "s/172.16.1.253/172.16.1.$cpt/g" /var/lib/lxc/$i/config
+		ln -s /var/lib/lxc/$i/config /etc/lxc/auto/$i
+		lxc-start -n $i
 	done
 }
