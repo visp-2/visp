@@ -70,9 +70,7 @@ function suppbr(){
 
 function configureNetwork() {
 
-        echo "IP Address for administration network (brO)"
-        read -p "Ex: 192.168.1.1/24 : " ipbr0
-
+	ipbr0="172.16.1.254"
         export ipbr0=`echo $ipbr0 | awk -F \/ {'print$1'}`
         maskbr0=`ipcalc $ipbr0 | grep Netmask | awk {'print$2'}`
         netbr0=`ipcalc $ipbr0 | grep Network | awk {'print$2'} | awk -F / {'print$1'}`
@@ -130,6 +128,7 @@ function configureNatForward() {
         # create exitLine to known the line number of "exit 0" 
 	cp ./scripts/firewall.sh /usr/sbin/firewall.sh
 	chmod u+x /usr/sbin/firewall.sh
+	/etc/rc.local
 	ip=`ip addr show dev br0 | grep global | awk {'print$2'} | cut -d'/' -f-1`
 	echo "/usr/sbin/firewall.sh" > /etc/rc.local
 	echo "exit 0" >> /etc/rc.local
