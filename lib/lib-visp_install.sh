@@ -129,6 +129,8 @@ function configureNatForward() {
 
         # create exitLine to known the line number of "exit 0" 
 	cp ./script /usr/sbin/firewall.sh
+	ip=`ip addr show dev br0 | grep global | awk {'print$2'} | cut -d'/' -f-1`
+	sed -i /"HOST"/"$ip"/ firewall.sh
 	echo "/usr/sbin/firewall.sh" > /etc/rc.local
 }
 
