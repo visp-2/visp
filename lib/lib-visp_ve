@@ -1,0 +1,9 @@
+
+function creatVe(){
+	
+	for i in apache mysql mail dns
+	do
+		lxc-clone -o template-client -n $i
+		
+	done
+}

@@ -21,11 +21,12 @@ do
 		else
 			echo "Great, no addtionnal packages to install"
 		fi
-		configureNetwork
-		configureNatForward
-		installCgroup
-		installTemplate
-		installSsh
+		#configureNetwork
+		#configureNatForward
+		#installCgroup
+		#installTemplate
+		#installSsh
+		customizeTemplate
 		;;
 	esac
 done

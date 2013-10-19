@@ -52,10 +52,22 @@ function installSsh(){
         rm -rf /etc/lxc/ssh/
         mkdir /etc/lxc/ssh
         chmod 600 /etc/lxc/ssh/
-        ssh-keygen -t rsa -f /etc/lxc/ssh/id_rsa-lxc > /dev/null
+        ssh-keygen -t rsa -N '' -q -f /etc/lxc/ssh/id_rsa-lxc
 
         mkdir /var/lib/lxc/template-client/rootfs/root/.ssh
         cp /etc/lxc/ssh/id_rsa-lxc.pub /var/lib/lxc/template-client/rootfs/root/.ssh/authorized_keys
 
         lxc-start -d -n template-client
+}
+
+function execSsh() {
+	ssh -o StrictHostKeyChecking=no -i /etc/lxc/ssh/id_rsa-lxc root@172.16.1.253 "$1"
+}
+
+function customizeTemplate() {
+	
+	cp scripts/customize-template.sh /var/lib/lxc/template-client/rootfs/usr/sbin/
+	execSsh "chmod u+x /usr/sbin/customize-template.sh; /usr/sbin/customize-template.sh"
+
+	
 }
