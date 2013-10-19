@@ -112,11 +112,11 @@ ifupdown,\
 locales,\
 libui-dialog-perl,\
 dialog,\
-isc-dhcp-client,\
 netbase,\
 net-tools,\
 iproute,\
 vim,\
+rsyslog,\
 tmux,\
 aptitude,\
 iputils-ping,\
