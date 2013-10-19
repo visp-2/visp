@@ -13,6 +13,6 @@ function createVe(){
 		lxc-clone -o template-client -n $i
 		sed -i "s/172.16.1.253/172.16.1.$cpt/g" /var/lib/lxc/$i/config
 		ln -s /var/lib/lxc/$i/config /etc/lxc/auto/$i
-		lxc-start -n $i
+		lxc-start -n $i -d
 	done
 }
