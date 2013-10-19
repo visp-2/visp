@@ -1,9 +1,9 @@
 #!/bin/bash
 
 
-. ./lib/lib-visp_install
-. ./lib/lib-visp_lxc
-. ./lib/lib-visp_template
+. ./lib/lib-visp_install.sh
+#. ./lib/lib-visp_lxc
+#. ./lib/lib-visp_template
 
 
 while getopts "ci" opt
@@ -14,7 +14,7 @@ do
 		;;
 		i)
 		checkInstall
-		if [ ${#toTinstall[@]} -ne 0 ]
+		if [ ${#toInstall[@]} -ne 0 ]
 		then
 			installPackages
 			checkInstall
@@ -26,4 +26,5 @@ do
 		installCgroup
 		installTemplate
 
+	esac
 done

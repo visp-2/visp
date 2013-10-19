@@ -128,71 +128,10 @@ function configureNatForward() {
         # add ip_forward and nat to rc.local
 
         # create exitLine to known the line number of "exit 0" 
-	cp ./script /usr/sbin/firewall.sh
+	cp ./scripts/firewall.sh /usr/sbin/firewall.sh
 	ip=`ip addr show dev br0 | grep global | awk {'print$2'} | cut -d'/' -f-1`
-	sed -i /"HOST"/"$ip"/ firewall.sh
+	sed -i s/"HOST"/"$ip"/g /usr/sbin/firewall.sh
 	echo "/usr/sbin/firewall.sh" > /etc/rc.local
-}
-
-
-function installCgroup() {
-
-        cgroupFstab=`grep cgroup /etc/fstab`
-
-        if [ -z "$cgroupFstab" ]
-        then
-                cat << EOF >> /etc/fstab
-
-cgroup          /sys/fs/cgroup  cgroup  defaults        0       0
-
-EOF
-                cgroupMount=`mount | grep cgroup`
-                if [ -z $cgroupMount ]
-                then
-                        mount cgroup
-
-                        if [ $? -ne 0 ]
-                        then
-                                echo "Cannot mount cgroup"
-                                exit 1
-                        fi
-                fi
-        fi
-
-}
-
-function installTemplate() {
-
-        ipTemplate=`echo $netbr0 | sed "s/0/253/g"`
-
-        cp scripts/lxc-debian /usr/share/lxc/template-clients
-
-        if [ -d /var/lib/lxc/template-client ]
-        then
-                read -p "The template-client already exist. Do you want to remove it? (yes
-/no) " yes
-
-                while true
-                do
-
-
-                        if [ -z "$yes" ]
-                        then
-                                read -p "Type yes or no " yes
-                        elif [ "$yes" == "yes" ]
-                        then
-                                createTemplate
-                                break
-                        elif [ "$yes" == "no" ]
-                        then
-                                echo "Ok. We will keep your template-client"
-                                break
-                        fi
-                done
-        else
-                createTemplate
-        fi
-
 }
 
 
