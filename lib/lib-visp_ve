@@ -21,9 +21,9 @@ function createVe(){
 		ping -c 1 -W 1 172.16.1.$cpt
 		if [ $? -eq 0 ]
 		then
-			echo " $i network ${vertclair}OK${neutre}"
+			echo -e " $i network ${vertclair}OK${neutre}"
 		else
-			echo "$i NETWORK ${rougefonce}NOK${neure}"
+			echo -e "$i NETWORK ${rougefonce}NOK${neure}"
 		fi
 	
 		scp ./script/customize-ve.sh root@172.16.1.$i:/usr/sbin
