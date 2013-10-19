@@ -1,8 +1,8 @@
 #!/bin/bash
 
 
-. ./lib/lib-visp_install.sh
-#. ./lib/lib-visp_lxc
+. ./lib/lib-visp_install
+. ./lib/lib-visp_lxc
 #. ./lib/lib-visp_template
 
 
@@ -25,6 +25,7 @@ do
 		configureNatForward
 		installCgroup
 		installTemplate
-
+		installSsh
+		;;
 	esac
 done
