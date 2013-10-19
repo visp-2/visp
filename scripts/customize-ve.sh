@@ -22,7 +22,7 @@ function mysql() {
 function mail() {
 	export DEBIAN_FRONTEND=noninteractive	
 	aptitude update > /dev/null
-	aptitude install -y postfix dovecot-imapd > dev/null
+	aptitude install -y postfix dovecot-imapd > /dev/null
 }
 
 function dns() {
