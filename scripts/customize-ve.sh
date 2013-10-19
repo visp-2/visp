@@ -3,12 +3,12 @@
 # customize-template.sh
 
 # Ce script est exécuté sur les différents VE une fois
-# qu'ils sont créés pour les customizer (install apache
+# qu'ils sont créés pour les customizer (install -y apache
 # ou mysql ou mail, etc)
 
 function apache() {
 	aptitude update > /dev/null
-	aptitude install apache2 php5 php5-mysql > /dev/null
+	aptitude install -y apache2 php5 php5-mysql > /dev/null
 }
 
 function mysql() {
@@ -16,18 +16,18 @@ function mysql() {
 	# user root de MySQL
 	export DEBIAN_FRONTEND=noninteractive	
 	aptitude update > /dev/null
-	aptitude install mysql-server > /dev/null
+	aptitude install -y mysql-server > /dev/null
 }
 
 function mail() {
 	export DEBIAN_FRONTEND=noninteractive	
 	aptitude update > /dev/null
-	aptitude install postfix dovecot-imapd > dev/null
+	aptitude install -y postfix dovecot-imapd > dev/null
 }
 
 function dns() {
 	aptitude update > /dev/null
-	aptitude install bind9 > /dev/null
+	aptitude install -y bind9 > /dev/null
 }
 
 while getopts "amMd" opt
