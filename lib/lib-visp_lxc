@@ -1,0 +1,61 @@
+
+
+function installTemplate() {
+
+        export ipTemplate=`echo $netbr0 | sed "s/0/253/g"`
+
+        cp scripts/lxc-debian /usr/share/lxc/templates/
+
+        if [ -d /var/lib/lxc/template-client ]
+        then
+                read -p "The template-client already exist. Do you want to remove it? (yes/no) " yes 
+
+                while true
+                do
+
+    
+                        if [ -z "$yes" ]
+                        then
+                                read -p "Type yes or no " yes 
+                        elif [ "$yes" == "yes" ]
+                        then
+                                createTemplate
+                                break
+                        elif [ "$yes" == "no" ]
+                        then
+                                echo "Ok. We will keep your template-client"
+                                break
+                        fi  
+                done
+        else
+                createTemplate
+        fi  
+
+}
+
+function createTemplate() {
+        rm -rf /var/lib/lxc/template-client
+    
+        echo ""
+        echo "Creating Template ..."
+        lxc-create -n template-client -t debian > /dev/null 2>&1
+        echo "Template Configured"
+
+        sed -i "s/IPV4/$ipTemplate\/24/g" /var/lib/lxc/template-client/config
+        sed -i "s/GW/$ipbr0/g" /var/lib/lxc/template-client/config
+}
+
+function installSsh(){
+	
+	# create a rsa key for ssh to be able to execute some
+        # command on the VE
+        rm -rf /etc/lxc/ssh/
+        mkdir /etc/lxc/ssh
+        chmod 600 /etc/lxc/ssh/
+        ssh-keygen -t rsa -N "" -f /etc/lxc/ssh/id_rsa-lxc > /dev/null
+
+        mkdir /var/lib/lxc/template-client/rootfs/root/.ssh
+        cp /etc/lxc/ssh/id_rsa-lxc.pub /var/lib/lxc/template-client/rootfs/root/.ssh/authorized_keys
+
+        lxc-start -d -n template-client
+}

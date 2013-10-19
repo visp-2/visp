@@ -36,6 +36,8 @@ configure_debian()
         fi
     done
 
+    echo nameserver 8.8.8.8 > $rootfs/etc/resolv.conf
+
     # configure the inittab
     cat <<EOF > $rootfs/etc/inittab
 id:3:initdefault:
