@@ -132,6 +132,7 @@ function configureNatForward() {
 	ip=`ip addr show dev br0 | grep global | awk {'print$2'} | cut -d'/' -f-1`
 	sed -i s/"HOST"/"$ip"/g /usr/sbin/firewall.sh
 	echo "/usr/sbin/firewall.sh" > /etc/rc.local
+	echo "exit 0" >> /etc/rc.local
 }
 
 
