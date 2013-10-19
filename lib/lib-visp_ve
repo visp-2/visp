@@ -4,6 +4,10 @@ function execSsh() {
  
 
 function createVe(){
+
+	neutre='\e[0;m'
+        rougefonce='\e[0;31m'
+        vertclair='\e[1;32m'
 	
 	lxc-stop -n template-client
 
@@ -14,6 +18,23 @@ function createVe(){
 		sed -i "s/172.16.1.253/172.16.1.$cpt/g" /var/lib/lxc/$i/config
 		ln -s /var/lib/lxc/$i/config /etc/lxc/auto/$i
 		lxc-start -n $i -d
-		let cpt+=1
+		ping -c 1 -W 1 172.16.1.$cpt
+		if [ $? -eq 0 ]
+		then
+			echo " $i network ${vertclair}OK${neutre}"
+		else
+			echo "$i NETWORK ${rougefonce}NOK${neure}"
+		fi
+	
+		scp ./script/customize-ve.sh root@172.16.1.$i:/usr/sbin
+		case $cpt in
+			1)execSsh "chmod u+x /usr/sbin; /usr/sbin/customize-ve.sh -a";;
+			2)execSsh "chmod u+x /usr/sbin; /usr/sbin/customize-ve.sh -m";;
+			3)execSsh "chmod u+x /usr/sbin; /usr/sbin/customize-ve.sh -M";;
+			4)execSsh "chmod u+x /usr/sbin; /usr/sbin/customize-ve.sh -d";;
+		esac
+	
+	let cpt+=1
 	done
 }
+
