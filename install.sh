@@ -26,6 +26,7 @@ do
 		installCgroup
 		installTemplate
 		installSsh
+		createVe
 		;;
 	esac
 done
