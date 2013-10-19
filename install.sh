@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 
 . ./lib/lib-visp_install
@@ -26,7 +26,7 @@ do
 		installCgroup
 		installTemplate
 		installSsh
-		customizeTemplate
+		#customizeTemplate
 		;;
 	esac
 done
