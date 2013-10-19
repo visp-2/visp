@@ -26,7 +26,7 @@ function createVe(){
 			echo -e "$i NETWORK ${rougefonce}NOK${neure}"
 		fi
 	
-		scp ./script/customize-ve.sh root@172.16.1.$i:/usr/sbin
+		scp ./script/customize-ve.sh root@172.16.1.$cpt:/usr/sbin
 		case $cpt in
 			1)execSsh "chmod u+x /usr/sbin; /usr/sbin/customize-ve.sh -a";;
 			2)execSsh "chmod u+x /usr/sbin; /usr/sbin/customize-ve.sh -m";;
