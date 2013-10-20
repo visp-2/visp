@@ -27,12 +27,12 @@ function createVe(){
 			echo -e "$i network ${rougefonce}NOK${neutre}"
 		fi
 	
-		scp -o StrictHostKeyChecking=no -i /etc/lxc/ssh/id_rsa-lxc ./scripts/customize-ve.sh root@172.16.1.$cpt:/usr/sbin
+		scp -q -o StrictHostKeyChecking=no -i /etc/lxc/ssh/id_rsa-lxc ./scripts/customize-ve.sh root@172.16.1.$cpt:/usr/sbin
 		case $cpt in
-			1)execSsh "chmod u+x /usr/sbin/customize-ve.sh; /usr/sbin/customize-ve.sh -a" $cpt;;
-			2)execSsh "chmod u+x /usr/sbin/customize-ve.sh; /usr/sbin/customize-ve.sh -m" $cpt;;
-			3)execSsh "chmod u+x /usr/sbin/customize-ve.sh; /usr/sbin/customize-ve.sh -M" $cpt;;
-			4)execSsh "chmod u+x /usr/sbin/customize-ve.sh; /usr/sbin/customize-ve.sh -d" $cpt;;
+			1)execSsh "chmod u+x /usr/sbin/customize-ve.sh; > /dev/null /usr/sbin/customize-ve.sh -a" $cpt;;
+			2)execSsh "chmod u+x /usr/sbin/customize-ve.sh; > /dev/null /usr/sbin/customize-ve.sh -m" $cpt;;
+			3)execSsh "chmod u+x /usr/sbin/customize-ve.sh; > /dev/null /usr/sbin/customize-ve.sh -M" $cpt;;
+			4)execSsh "chmod u+x /usr/sbin/customize-ve.sh; > /dev/null /usr/sbin/customize-ve.sh -d" $cpt;;
 		esac
 	
 	let cpt+=1
