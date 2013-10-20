@@ -6,6 +6,8 @@
 # qu'ils sont créés pour les customizer (install -y apache
 # ou mysql ou mail, etc)
 
+PATH=/bin:/sbin:/usr/bin:/usr/sbin
+
 function apache() {
 	aptitude update > /dev/null
 	aptitude install -y apache2 php5 php5-mysql > /dev/null
