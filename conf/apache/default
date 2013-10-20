@@ -1,0 +1,12 @@
+<NameVirtualHost *:80>
+ServerName SERVERNAME
+DocumentRoot /var/www/
+	<Directory /var/www/>
+		Options Indexes FollowSymLinks MultiViews
+		AllowOverride None
+		Order allow,deny
+		allow from all
+		RedirectMatch ^/$ /index.php
+	</Directory>
+</VirtualHost>
+

@@ -23,6 +23,9 @@ function mail() {
 	export DEBIAN_FRONTEND=noninteractive	
 	aptitude update > /dev/null
 	aptitude install -y postfix dovecot-imapd > /dev/null
+
+	groupadd -g 5000 vmail
+	useradd -u 5000 -g vmail vmail
 }
 
 function dns() {
