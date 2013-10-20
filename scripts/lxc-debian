@@ -74,7 +74,7 @@ iface eth0 inet static
 EOF
 
     # configure locales
-    cat << EOF > /etc/default/locales
+    cat << EOF > $rootfs/etc/default/locale
 LC_ALL=en_US.UTF-8
 EOF
 
