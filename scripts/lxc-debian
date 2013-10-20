@@ -73,6 +73,11 @@ auto eth0
 iface eth0 inet static
 EOF
 
+    # configure locales
+    cat << EOF > /etc/default/locales
+LC_ALL=en_US.UTF-8
+EOF
+
     # set the hostname
     cat <<EOF > $rootfs/etc/hostname
 $hostname
