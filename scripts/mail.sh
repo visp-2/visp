@@ -1,32 +1,6 @@
 #!/bin/bash
 
 
-function install() {
-	echo todo
-}
-
-
-function createDomain() {
-	echo todo
-}
-
-function createEmail() {
-	echo todo
-}
-
-function createAlias() {
-	echo todo
-}
-
-function deleteEmail() {
-	echo todo
-}
-
-function deleteAlias() {
-	echo todo
-}
-
-
 while getopts "iCDd:m:a:" opt
 do
 	case $opt in
