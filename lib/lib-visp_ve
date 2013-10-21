@@ -12,7 +12,7 @@ function createVe(){
 	lxc-stop -n template-client
 
 	cpt=1
-	for i in apache mysql mail dns
+	for i in mail
 	do
 		lxc-clone -o template-client -n $i
 		sed -i "s/172.16.1.253/172.16.1.$cpt/g" /var/lib/lxc/$i/config
@@ -26,7 +26,11 @@ function createVe(){
 		else
 			echo -e "$i network ${rougefonce}NOK${neutre}"
 		fi
-	
+
+		# On transfert les fichiers de conf dans le VE pour qu'ils
+		# soient utilisé dans le script customize-ve.sh
+		scp -r -q -o StrictHostKeyChecking=no -i /etc/lxc/ssh/id_rsa-lxc ./conf/$i/ root@172.16.1.$cpt:/root
+
 		scp -q -o StrictHostKeyChecking=no -i /etc/lxc/ssh/id_rsa-lxc ./scripts/customize-ve.sh root@172.16.1.$cpt:/usr/sbin
 		case $cpt in
 			1)execSsh "chmod u+x /usr/sbin/customize-ve.sh; > /dev/null /usr/sbin/customize-ve.sh -a" $cpt;;

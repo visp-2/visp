@@ -27,8 +27,14 @@ function mail() {
 	aptitude update > /dev/null
 	aptitude install -y postfix dovecot-imapd > /dev/null 2>&1
 
+	# ajout du user et du groupe vmail qui ira déposer les mails (postfix)
+	# et qui les lira (dovecot)
 	groupadd -g 5000 vmail
 	useradd -u 5000 -g vmail vmail
+
+	cp /root/mail/postfix/* /etc/postfix/
+	cp -r /root/mail/dovecot/* /etc/dovecot/
+
 }
 
 function dns() {
