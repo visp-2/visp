@@ -18,6 +18,21 @@ function usage() {
 	exit 1
 }
 
+function ready() {
+	read -p "Do you want to continue? (y/N) " ready
+	if [ -z $ready ]
+	then
+		echo "Bye"
+		exit
+	elif [ "$ready" == "yes" ] || [ "$ready" == "y" ]
+	then
+		echo "Let's go"
+	else
+		echo "Bye"
+		exit
+	fi
+}
+
 function mailValidator() {
 	if [ $# -eq 0 ]
 	then
@@ -171,27 +186,33 @@ then
 		mailValidator $mail
 		echo "création d'une adresse mail ($mail) pour le domain $domain"
 		echo "si le domaine n'existe pas, on le crée"
+		ready
 	elif [ ! -z "$domain" ] && [ ! -z "$alias" ]
 	then
 		mailValidator $maildrop
 		mailValidator $alias
 		echo "création d'un alias $alias vers l'adresse $maildrop"
 		echo "si le domaine n'existe pas, on le crée"
+		ready
 	elif [ -z "$mail" ] && [ -z "$alias" ]
 	then
 		echo "création du domain $domain"
+		ready
 	fi
 elif [ "$delete" == "yes" ]
 then
 	if [ ! -z "$domain" ] && [ ! -z "$mail" ]
 	then
 		echo "suppression d'une adresse mail ($mail) pour le domain $domain"
+		ready
 	elif [ ! -z "$domain" ] && [ ! -z "$alias" ]
 	then
 		echo "suppression d'un alias $alias vers l'adresse $maildrop"
+		ready
 	elif [ -z "$mail" ] && [ -z "$alias" ]
 	then
 		echo "suppression du domain $domain et des toutes ses boites"
+		ready
 	fi
 else
 	echo "erreur inconnue"
