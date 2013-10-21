@@ -73,11 +73,6 @@ auto eth0
 iface eth0 inet static
 EOF
 
-    # configure locales
-    cat << EOF > $rootfs/etc/default/locale
-LC_ALL=en_US.UTF-8
-EOF
-
     # set the hostname
     cat <<EOF > $rootfs/etc/hostname
 $hostname
@@ -92,6 +87,7 @@ EOF
         chroot $rootfs update-locale LANG=$LANG
     fi
 
+
     # remove pointless services in a container
     chroot $rootfs /usr/sbin/update-rc.d -f checkroot.sh remove
     chroot $rootfs /usr/sbin/update-rc.d -f umountfs remove
@@ -100,6 +96,17 @@ EOF
 
     echo "root:root" | chroot $rootfs chpasswd
     echo "Root password is 'root', please change !"
+
+    # configure locales
+    cat << EOF > $rootfs/etc/default/locale
+LC_ALL=en_US.UTF-8
+EOF
+    touch $rootfs/root/toto
+    cat << EOF > $rootfs/etc/locale.gen
+en_US.UTF-8 UTF-8
+EOF
+
+    chroot $rootfs /usr/sbin/locale-gen
 
     return 0
 }
