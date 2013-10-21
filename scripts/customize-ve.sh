@@ -9,8 +9,9 @@
 PATH=/bin:/sbin:/usr/bin:/usr/sbin
 
 function apache() {
+	export DEBIAN_FRONTEND=noninteractive	
 	aptitude update > /dev/null
-	aptitude install -y apache2 php5 php5-mysql > /dev/null
+	aptitude install -y apache2 php5 php5-mysql > /dev/null 2>&1 
 }
 
 function mysql() {
@@ -18,21 +19,22 @@ function mysql() {
 	# user root de MySQL
 	export DEBIAN_FRONTEND=noninteractive	
 	aptitude update > /dev/null
-	aptitude install -y mysql-server > /dev/null
+	aptitude install -y mysql-server > /dev/null 2>&1
 }
 
 function mail() {
 	export DEBIAN_FRONTEND=noninteractive	
 	aptitude update > /dev/null
-	aptitude install -y postfix dovecot-imapd > /dev/null
+	aptitude install -y postfix dovecot-imapd > /dev/null 2>&1
 
 	groupadd -g 5000 vmail
 	useradd -u 5000 -g vmail vmail
 }
 
 function dns() {
+	export DEBIAN_FRONTEND=noninteractive	
 	aptitude update > /dev/null
-	aptitude install -y bind9 > /dev/null
+	aptitude install -y bind9 > /dev/null 2>&1
 }
 
 while getopts "amMd" opt
