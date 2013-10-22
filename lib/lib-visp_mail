@@ -1,7 +1,16 @@
 function createDomain() {
 	domain=$1
 	rootfs=/var/lib/lxc/mail/rootfs	
-	
+
+	domainExist=$(grep $domain $rootfs/etc/postfix/domains.cf)
+
+	if [ ! -z $domainExist ]
+	then
+		echo "Le domaine existe déjà"
+	fi
+
+	echo -e "$domain\tOK" >> $rootfs/etc/postfix/domains.cf
+	chroot $rootfs postmap /etc/postfix/domains.cf
 }
 
 function createEmail() {

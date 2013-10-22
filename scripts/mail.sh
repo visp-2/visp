@@ -1,6 +1,7 @@
-#!/bin/bash
+#!/bin/bash -x
 
 . /opt/visp/lib/lib-visp_domain
+. /opt/visp/lib/lib-visp_mail
 
 neutre='\e[0;m'
 rougefonce='\e[0;31m'
@@ -181,6 +182,7 @@ then
 	then
 		echo "création du domain $domain"
 		ready
+		createDomain $domain
 	fi
 elif [ "$delete" == "yes" ]
 then
