@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 . /opt/visp/lib/lib-visp_domain
 . /opt/visp/lib/lib-visp_mail
