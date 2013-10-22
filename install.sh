@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash  -x
 
 
 . ./lib/lib-visp_install
