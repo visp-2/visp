@@ -1,5 +1,7 @@
 #!/bin/bash
 
+. /opt/visp/lib/lib-visp_domain
+
 neutre='\e[0;m'
 rougefonce='\e[0;31m'
 vertclair='\e[1;32m'
@@ -32,26 +34,6 @@ function ready() {
 		exit
 	fi
 }
-
-function mailValidator() {
-	if [ $# -eq 0 ]
-	then
-		usage
-	fi
-	addressToValidate=$1	
-	domainToValidate=$(echo $addressToValidate | cut -d \@ -f 2)
-	result=$(whois $domainToValidate | grep -e "No whois server")
-	if [ -z "$result" ]
-	then
-		return 0
-	else
-		echo
-		echo -e "${rougefonce}Bad domain name for $addressToValidate${neutre}"
-		echo
-		exit 1
-	fi
-}
-
 if [ $# -eq 0 ]
 then
 	usage
@@ -132,11 +114,12 @@ fi
 if [ -z $completeAAddress ] && [ ! -z "$alias" ]
 then
 	alias=$alias@$domain
-elif [ ! -z "$mail" ]
+elif [ ! -z "$alias" ]
 then
 	domainOfAddress=$(echo $alias | cut -d \@ -f 2)
 	if [ "$domain" != "$domainOfAddress" ]
 	then
+		echo alias?
 		echo
 		echo -e "${rougefonce}The domain of the provided address ($domainOfAddress) doesn't match the domain name ($domain)${neutre}"
 		echo

@@ -1,0 +1,19 @@
+function mailValidator() {
+	if [ $# -eq 0 ]
+	then
+		usage
+	fi
+	addressToValidate=$1	
+	domainToValidate=$(echo $addressToValidate | cut -d \@ -f 2)
+	result=$(whois $domainToValidate | grep -e "No whois server")
+	if [ -z "$result" ]
+	then
+		return 0
+	else
+		echo
+		echo -e "${rougefonce}Bad domain name for $addressToValidate${neutre}"
+		echo
+		exit 1
+	fi
+}
+

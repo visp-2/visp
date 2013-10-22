@@ -27,6 +27,9 @@ do
 		installTemplate
 		installSsh
 		createVe
+		mkdir -p /opt/visp/bin 
+		cp -r lib /opt/visp
+		cp scripts/mail.sh /opt/visp/bin
 		;;
 	esac
 done

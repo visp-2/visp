@@ -1,9 +1,7 @@
-function install() {
-	echo todo
-}
-
 function createDomain() {
-	echo todo
+	domain=$1
+	rootfs=/var/lib/lxc/mail/rootfs	
+	
 }
 
 function createEmail() {
