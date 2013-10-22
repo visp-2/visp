@@ -1,17 +1,20 @@
 function createDomain() {
 	domain=$1
+	mailCreation=$2
 	rootfs=/var/lib/lxc/mail/rootfs	
 
 	domainExist=$(grep $domain $rootfs/etc/postfix/domains.cf)
 
-	if [ ! -z $domainExist ]
+	if [ ! -z "$domainExist" ] && [ -z $mailCreation ]
 	then
 		echo "Le domaine exist déjà"
 		exit 1
+	elif [ -z "$domainExist" ] 
+	then
+		echo -e "$domain\tOK" >> $rootfs/etc/postfix/domains.cf
+		echo "mail.$domain" >> $rootfs/etc/mailname
+		chroot $rootfs postmap /etc/postfix/domains.cf
 	fi
-
-	echo -e "$domain\tOK" >> $rootfs/etc/postfix/domains.cf
-	chroot $rootfs postmap /etc/postfix/domains.cf
 }
 
 function createEmail() {
@@ -21,15 +24,18 @@ function createEmail() {
 
 	rootfs=/var/lib/lxc/mail/rootfs	
 	
-	mailExist=$(grep $mail $rootfs/etc/{postfix/address.cf,dovecote/users})
+	mailExist=$(grep $mail $rootfs/etc/{postfix/address.cf,dovecot/users})
 	
-	if [ ! -z $mailExist ]
+	if [ ! -z "$mailExist" ]
 	then
 		echo "l'adresse existe déjà"
+		exit 1
 	fi
 	
 	echo -e "$mail\t$mailbox" >> $rootfs/etc/postfix/address.cf
-	echo "$address:${PLAIN}test1234=
+	echo "$mail:{PLAIN}test1234=" >> $rootfs/etc/dovecot/users
+
+	chroot $rootfs postmap /etc/postfix/address.cf
 }
 
 function createAlias() {

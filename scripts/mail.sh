@@ -170,7 +170,9 @@ then
 		mailValidator $mail
 		echo "création d'une adresse mail ($mail) pour le domain $domain"
 		echo "si le domaine n'existe pas, on le crée"
-		ready
+	 	ready
+		createDomain $domain yes
+		createEmail $mail $domain
 	elif [ ! -z "$domain" ] && [ ! -z "$alias" ]
 	then
 		mailValidator $maildrop
