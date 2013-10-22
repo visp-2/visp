@@ -6,7 +6,8 @@ function createDomain() {
 
 	if [ ! -z $domainExist ]
 	then
-		echo "Le domaine existe déjà"
+		echo "Le domaine exist déjà"
+		exit 1
 	fi
 
 	echo -e "$domain\tOK" >> $rootfs/etc/postfix/domains.cf
@@ -14,7 +15,21 @@ function createDomain() {
 }
 
 function createEmail() {
-	echo todo
+	mail=$1
+	domain=$2
+	mailbox=$domain/$(echo $mail | cut -d \@ -f 1)
+
+	rootfs=/var/lib/lxc/mail/rootfs	
+	
+	mailExist=$(grep $mail $rootfs/etc/{postfix/address.cf,dovecote/users})
+	
+	if [ ! -z $mailExist ]
+	then
+		echo "l'adresse existe déjà"
+	fi
+	
+	echo -e "$mail\t$mailbox" >> $rootfs/etc/postfix/address.cf
+	echo "$address:${PLAIN}test1234=
 }
 
 function createAlias() {

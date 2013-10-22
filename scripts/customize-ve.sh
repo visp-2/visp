@@ -31,6 +31,8 @@ function mail() {
 	# et qui les lira (dovecot)
 	groupadd -g 5000 vmail
 	useradd -u 5000 -g vmail vmail
+	
+	chown vmail:vmail /home
 
 	cp /root/mail/postfix/* /etc/postfix/
 	cp -r /root/mail/dovecot/* /etc/dovecot/
