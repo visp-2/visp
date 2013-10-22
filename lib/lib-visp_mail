@@ -14,6 +14,7 @@ function createDomain() {
 		echo -e "$domain\tOK" >> $rootfs/etc/postfix/domains.cf
 		echo "mail.$domain" >> $rootfs/etc/mailname
 		chroot $rootfs postmap /etc/postfix/domains.cf
+		chroot $rootfs service postfix reload
 	fi
 }
 
@@ -36,6 +37,8 @@ function createEmail() {
 	echo "$mail:{PLAIN}test1234=" >> $rootfs/etc/dovecot/users
 
 	chroot $rootfs postmap /etc/postfix/address.cf
+	chroot $rootfs service postfix reload
+	chroot $rootfs service dovecot reload
 }
 
 function createAlias() {
