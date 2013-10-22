@@ -12,7 +12,7 @@ function createVe(){
 	lxc-stop -n template-client
 
 	cpt=1
-	for i in mail
+	for i in mail apache dns mysql
 	do
 		lxc-clone -o template-client -n $i
 		sed -i "s/172.16.1.253/172.16.1.$cpt/g" /var/lib/lxc/$i/config
