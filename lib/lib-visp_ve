@@ -57,5 +57,8 @@ function createVe(){
 	
 	let cpt+=1
 	done
+
+	# Activation du firewall après avoir modifié les variables
+	/etc/rc.local	
 }
 
