@@ -129,7 +129,7 @@ function configureNatForward() {
 	cp ./scripts/firewall.sh /usr/sbin/firewall.sh
 	chmod u+x /usr/sbin/firewall.sh
 	ip=`ip addr show dev br0 | grep global | awk {'print$2'} | cut -d'/' -f-1`
-	echo "/usr/sbin/firewall.sh" > /etc/rc.local
+	echo "/usr/sbin/firewall.sh start" > /etc/rc.local
 	echo "exit 0" >> /etc/rc.local
 	/etc/rc.local
 }
