@@ -33,10 +33,26 @@ function createVe(){
 
 		scp -q -o StrictHostKeyChecking=no -i /etc/lxc/ssh/id_rsa-lxc ./scripts/customize-ve.sh root@172.16.1.$cpt:/usr/sbin
 		case $i in
-			apache)execSsh "chmod u+x /usr/sbin/customize-ve.sh > /dev/null; /usr/sbin/customize-ve.sh -a" $cpt;;
-			mysql)execSsh "chmod u+x /usr/sbin/customize-ve.sh > /dev/null; /usr/sbin/customize-ve.sh -m" $cpt;;
-			mail)execSsh "chmod u+x /usr/sbin/customize-ve.sh > /dev/null; /usr/sbin/customize-ve.sh -M" $cpt;;
-			dns)execSsh "chmod u+x /usr/sbin/customize-ve.sh > /dev/null; /usr/sbin/customize-ve.sh -d" $cpt;;
+			apache)
+			execSsh "chmod u+x /usr/sbin/customize-ve.sh > /dev/null;" $cpt
+			execSsh "/usr/sbin/customize-ve.sh -a" $cpt
+			sed -i "s/%WEB/$cpt/g" /usr/sbin/firewall.sh
+			;;
+			mysql)
+			execSsh "chmod u+x /usr/sbin/customize-ve.sh > /dev/null;" $cpt 
+			execSsh "/usr/sbin/customize-ve.sh -m" $cpt
+			sed -i "s/%SQL/$cpt/g" /usr/sbin/firewall.sh
+			;;
+			mail)
+			execSsh "chmod u+x /usr/sbin/customize-ve.sh > /dev/null;" $cpt 
+			execSsh "/usr/sbin/customize-ve.sh -M" $cpt
+			sed -i "s/%MAIL/$cpt/g" /usr/sbin/firewall.sh
+			;;
+			dns)
+			execSsh "chmod u+x /usr/sbin/customize-ve.sh > /dev/null;" $cpt 
+			execSsh "/usr/sbin/customize-ve.sh -d" $cpt
+			sed -i "s/%DNS/$cpt/g" /usr/sbin/firewall.sh
+			;;
 		esac
 	
 	let cpt+=1
