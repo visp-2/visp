@@ -33,7 +33,9 @@ function createEmail() {
 		exit 1
 	fi
 	
-	echo -e "$mail\t$mailbox" >> $rootfs/etc/postfix/address.cf
+	# important de laisser le / à la fin dans le fichier
+	# sinon il crée un fichier et pas un rep
+	echo -e "$mail\t$mailbox/" >> $rootfs/etc/postfix/address.cf
 	echo "$mail:{PLAIN}test1234=" >> $rootfs/etc/dovecot/users
 
 	chroot $rootfs postmap /etc/postfix/address.cf
