@@ -31,6 +31,9 @@ function createVe(){
 		# soient utilisé dans le script customize-ve.sh
 		scp -r -q -o StrictHostKeyChecking=no -i /etc/lxc/ssh/id_rsa-lxc ./conf/$i/ root@172.16.1.$cpt:/root
 
+		echo 1 > /proc/sys/net/ipv4/ip_forward
+		iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+
 		scp -q -o StrictHostKeyChecking=no -i /etc/lxc/ssh/id_rsa-lxc ./scripts/customize-ve.sh root@172.16.1.$cpt:/usr/sbin
 		case $i in
 			apache)
