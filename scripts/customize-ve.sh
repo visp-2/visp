@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bashi
 
 # customize-template.sh
 
@@ -20,6 +20,8 @@ function mysql() {
 	export DEBIAN_FRONTEND=noninteractive	
 	aptitude update > /dev/null
 	aptitude install -y mysql-server > /dev/null 2>&1
+	mysql -u root
+	
 }
 
 function mail() {
