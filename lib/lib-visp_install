@@ -6,7 +6,7 @@ function checkInstall() {
         rougefonce='\e[0;31m'
         vertclair='\e[1;32m'
 
-        for i in aptitude lxc bridge-utils ipcalc
+        for i in aptitude lxc bridge-utils ipcalc mysql-client
         do  
                 package=`dpkg -l | grep ii.*$i`
                 if [ ! -z "$package" ]
