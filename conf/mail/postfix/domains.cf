@@ -1,2 +1,7 @@
-# Example
-# labo-linux.be	OK
+user = moderator
+password = test1234=
+
+hosts = 172.16.1.3
+dbname = lxc
+
+query = SELECT domain FROM domains WHERE domain='%s' AND active='1'

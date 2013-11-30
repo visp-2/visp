@@ -11,6 +11,8 @@ function apache() {
 	export DEBIAN_FRONTEND=noninteractive	
 	aptitude update > /dev/null
 	aptitude install -y apache2 php5 php5-mysql > /dev/null 2>&1
+	mv /root/apache/apache2.conf /etc/apache2/apache2.conf
+	mv /root/apache/* /etc/apache2/sites-available/
 }
 
 function mysql() {
@@ -27,7 +29,7 @@ function mysql() {
 function mail() {
 	export DEBIAN_FRONTEND=noninteractive	
 	aptitude update > /dev/null
-	aptitude install -y postfix dovecot-imapd > /dev/null 2>&1
+	aptitude install -y postfix postfix-mysql dovecot-imapd dovecot-imapd> /dev/null 2>&1
 
 	# ajout du user et du groupe vmail qui ira déposer les mails (postfix)
 	# et qui les lira (dovecot)

@@ -1,4 +1,7 @@
-# Example
+user = moderator
+password = test1234=
 
-# mail				path in /home/
-# antoine@labo-linux.be		labo-linux.be/antoine/
+hosts = 172.16.1.3
+dbname = lxc
+
+query = SELECT homeP FROM users WHERE address='%s' AND active='1'

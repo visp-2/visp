@@ -39,9 +39,8 @@ recipient_delimiter = +
 inet_interfaces = all
 
 
-virtual_mailbox_domains	= hash:/etc/postfix/domains.cf
-virtual_mailbox_base = /home/
-virtual_mailbox_maps = hash:/etc/postfix/address.cf
+virtual_mailbox_domains	= mysql:/etc/postfix/domains.cf
+virtual_mailbox_maps = mysql:/etc/postfix/address.cf
 virtual_uid_maps = static:1000
 virtual_gid_maps = static:1000
 

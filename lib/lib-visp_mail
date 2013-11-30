@@ -5,9 +5,7 @@ function createDomain() {
 
 	domainExist=$(/usr/bin/mysql -u moderator -ptest1234= -h 172.16.1.4 lxc -e "SELECT domain FROM domains WHERE domain=\"$domain\"")
 
-	echo $domainExist $mailCreation
-
-	if [ ! -z "$domainExist" ] && [ ! -z "$mailCreation" ]
+	if [ ! -z "$domainExist" ] && [ -z "$mailCreation" ]
 	then
 		echo "Le domaine exist déjà"
 		exit 1
@@ -15,7 +13,7 @@ function createDomain() {
 	then
 		/usr/bin/mysql -u moderator -ptest1234= -h 172.16.1.4 lxc -e "INSERT INTO domains (domain, active) VALUES (\"$domain\",\"1\")"
 		echo "mail.$domain" >> $rootfs/etc/mailname
-		chroot $rootfs service postfix reload
+		chroot $rootfs service postfix restart
 	fi
 }
 
@@ -37,10 +35,11 @@ function createEmail() {
 	# important de laisser le / à la fin dans le fichier
 	# sinon il crée un fichier et pas un rep
 	/usr/bin/mysql -u moderator -ptest1234= -h 172.16.1.4 lxc -e \
-						"INSERT INTO users (username,password,mail,phone,mailbox,active) VALUES (\"$mail\"\"${PLAIN}test1234=\"\"+32 475 123 456\"\"$mailbox\"\"1\")"
+			"INSERT INTO users (username,password,mail,phone,mailbox,active) \
+			VALUES (\"$mail\",\"${PLAIN}test1234=\",\"$mail\",\"+32 475 123 456\",\"$mailbox\",\"1\")"
 
-	chroot $rootfs service postfix reload
-	chroot $rootfs service dovecot reload
+	chroot $rootfs service postfix restart
+	chroot $rootfs service dovecot restart
 }
 
 function createAlias() {
