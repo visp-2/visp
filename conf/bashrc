@@ -1,0 +1,13 @@
+PATH=$PATH:/opt/visp/bin
+
+IFS=$'\n'
+
+for i in `lxc-adm | grep 172`
+do
+	ip=$(echo $i | awk {'print$2'} | cut -d "/" -f 1)
+	name=$(echo $i | cut -d : -f 1)
+
+	alias $name="ssh root@$ip -i /etc/lxc/ssh/id_rsa-lxc"
+done
+
+export EDITOR=vim

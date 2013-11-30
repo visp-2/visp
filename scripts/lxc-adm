@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# List all VE who are started automaticly 
+for i in `ls /etc/lxc/auto`
+do 
+        echo -e "$i:\t$(grep ipv4 /var/lib/lxc/$i/config | grep "/" | awk {'print$3'})"
+        echo -e "\t$(grep ipv6 /var/lib/lxc/$i/config | grep -v gateway | awk {'print$3'})"
+done
