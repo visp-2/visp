@@ -31,6 +31,7 @@ do
 		cp -r lib /opt/visp
 		cp scripts/mail.sh /opt/visp/bin
 		cp scripts/lxc-adm /opt/visp/bin
+		cp conf/bashrc /root/.bashrc
 		;;
 	esac
 done

@@ -1,6 +1,5 @@
-#!/bin/bashi
+#!/bin/bash
 
-# customize-template.sh
 
 # Ce script est exécuté sur les différents VE une fois
 # qu'ils sont créés pour les customizer (install -y apache
@@ -11,7 +10,7 @@ PATH=/bin:/sbin:/usr/bin:/usr/sbin
 function apache() {
 	export DEBIAN_FRONTEND=noninteractive	
 	aptitude update > /dev/null
-	aptitude install -y apache2 php5 php5-mysql > /dev/null 2>&1 
+	aptitude install -y apache2 php5 php5-mysql > /dev/null 2>&1
 }
 
 function mysql() {
@@ -20,8 +19,9 @@ function mysql() {
 	export DEBIAN_FRONTEND=noninteractive	
 	aptitude update > /dev/null
 	aptitude install -y mysql-server > /dev/null 2>&1
-	mysql -u root
-	
+	sed -i "s/127.0.0.1/0.0.0.0/g" /etc/mysql/my.cnf	
+	service mysql restart
+	mysql -u root < /root/mysql/db.sql
 }
 
 function mail() {

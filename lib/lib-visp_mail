@@ -3,17 +3,18 @@ function createDomain() {
 	mailCreation=$2
 	rootfs=/var/lib/lxc/mail/rootfs	
 
-	domainExist=$(grep $domain $rootfs/etc/postfix/domains.cf)
+	domainExist=$(/usr/bin/mysql -u moderator -ptest1234= -h 172.16.1.4 lxc -e "SELECT domain FROM domains WHERE domain=\"$domain\"")
 
-	if [ ! -z "$domainExist" ] && [ -z $mailCreation ]
+	echo $domainExist $mailCreation
+
+	if [ ! -z "$domainExist" ] && [ ! -z "$mailCreation" ]
 	then
 		echo "Le domaine exist déjà"
 		exit 1
 	elif [ -z "$domainExist" ] 
 	then
-		echo -e "$domain\tOK" >> $rootfs/etc/postfix/domains.cf
+		/usr/bin/mysql -u moderator -ptest1234= -h 172.16.1.4 lxc -e "INSERT INTO domains (domain, active) VALUES (\"$domain\",\"1\")"
 		echo "mail.$domain" >> $rootfs/etc/mailname
-		chroot $rootfs postmap /etc/postfix/domains.cf
 		chroot $rootfs service postfix reload
 	fi
 }
@@ -21,11 +22,11 @@ function createDomain() {
 function createEmail() {
 	mail=$1
 	domain=$2
-	mailbox=$domain/$(echo $mail | cut -d \@ -f 1)
+	mailbox=/home/$domain/$(echo $mail | cut -d \@ -f 1)
 
 	rootfs=/var/lib/lxc/mail/rootfs	
 	
-	mailExist=$(grep $mail $rootfs/etc/{postfix/address.cf,dovecot/users})
+	mailExist=$(/usr/bin/mysql -u moderator -ptest1234= -h 172.16.1.4 lxc -e "SELECT * FROM users WHERE mail=\"$mail\"")
 	
 	if [ ! -z "$mailExist" ]
 	then
@@ -35,10 +36,9 @@ function createEmail() {
 	
 	# important de laisser le / à la fin dans le fichier
 	# sinon il crée un fichier et pas un rep
-	echo -e "$mail\t$mailbox/" >> $rootfs/etc/postfix/address.cf
-	echo "$mail:{PLAIN}test1234=" >> $rootfs/etc/dovecot/users
+	/usr/bin/mysql -u moderator -ptest1234= -h 172.16.1.4 lxc -e \
+						"INSERT INTO users (username,password,mail,phone,mailbox,active) VALUES (\"$mail\"\"${PLAIN}test1234=\"\"+32 475 123 456\"\"$mailbox\"\"1\")"
 
-	chroot $rootfs postmap /etc/postfix/address.cf
 	chroot $rootfs service postfix reload
 	chroot $rootfs service dovecot reload
 }

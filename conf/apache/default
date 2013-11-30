@@ -6,7 +6,6 @@ DocumentRoot /var/www/
 		AllowOverride None
 		Order allow,deny
 		allow from all
-		RedirectMatch ^/$ /index.php
 	</Directory>
 </VirtualHost>
 
