@@ -1,11 +1,6 @@
 #!/bin/bash
 
 #apache.sh script servant a configurer le service apache
-function usage{
-#	echo " -d domain name"
-#	echo ""
-#	echo " -s with ssl"
-#}
 
 function create() {
 	rootfs=/var/lib/lxc/apache/rootfs
@@ -13,10 +8,10 @@ function create() {
 	if [ $ssl -eq 1 ]
 	then
 		chroot $rootfs cp $site/default-ssl $site/$domain
-		chroot $rootfs sed -i "s/SERVERNAME/www.$domain/g"
+		chroot $rootfs sed -i "s/SERVERNAME/www.$domain/g" $site/$domain
 	else
 		chroot $rootfs cp $site/default $site/$domain
-		chroot $rootfs sed -i "s/SERVERNAME/www.$domain/g"
+		chroot $rootfs sed -i "s/SERVERNAME/www.$domain/g" $site/$domain
 	fi
 }
 
@@ -24,7 +19,7 @@ while getopts "d:s" opt
 do
 	case $opt in
 		d)
-		domain=$OPTARG
+		domain=$OPTARG;;
 		s)
 		ssl=1;;
 		:)
