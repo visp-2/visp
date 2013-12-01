@@ -40,6 +40,7 @@ inet_interfaces = all
 
 
 virtual_mailbox_domains	= mysql:/etc/postfix/domains.cf
+virtual_mailbox_domains = /
 virtual_mailbox_maps = mysql:/etc/postfix/address.cf
 virtual_uid_maps = static:1000
 virtual_gid_maps = static:1000

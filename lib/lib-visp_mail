@@ -13,14 +13,14 @@ function createDomain() {
 	then
 		/usr/bin/mysql -u moderator -ptest1234= -h 172.16.1.4 lxc -e "INSERT INTO domains (domain, active) VALUES (\"$domain\",\"1\")"
 		echo "mail.$domain" >> $rootfs/etc/mailname
-		chroot $rootfs service postfix restart
+		ssh -i /etc/lxc/ssh/id_rsa-lxc root@172.16.1.1 service postfix restart
 	fi
 }
 
 function createEmail() {
 	mail=$1
 	domain=$2
-	mailbox=/home/$domain/$(echo $mail | cut -d \@ -f 1)
+	mailbox=/home/$domain/$(echo $mail | cut -d \@ -f 1)/
 
 	rootfs=/var/lib/lxc/mail/rootfs	
 	
@@ -38,8 +38,8 @@ function createEmail() {
 			"INSERT INTO users (username,password,mail,phone,mailbox,active) \
 			VALUES (\"$mail\",\"${PLAIN}test1234=\",\"$mail\",\"+32 475 123 456\",\"$mailbox\",\"1\")"
 
-	chroot $rootfs service postfix restart
-	chroot $rootfs service dovecot restart
+	ssh -i /etc/lxc/ssh/id_rsa-lxc root@172.16.1.1 service postfix restart
+	ssh -i /etc/lxc/ssh/id_rsa-lxc root@172.16.1.1 service dovecot restart
 }
 
 function createAlias() {

@@ -29,7 +29,7 @@ function mysqlfunction() {
 function mail() {
 	export DEBIAN_FRONTEND=noninteractive	
 	aptitude update > /dev/null
-	aptitude install -y postfix postfix-mysql dovecot-imapd dovecot-imapd> /dev/null 2>&1
+	aptitude install -y postfix postfix-mysql dovecot-imapd dovecot-mysql > /dev/null 2>&1
 
 	# ajout du user et du groupe vmail qui ira déposer les mails (postfix)
 	# et qui les lira (dovecot)
