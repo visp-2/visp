@@ -15,7 +15,7 @@ function apache() {
 	mv /root/apache/* /etc/apache2/sites-available/
 }
 
-function mysql() {
+function mysqlfunction() {
 	# Pour désactiver la demande de password pour le 
 	# user root de MySQL
 	export DEBIAN_FRONTEND=noninteractive	
@@ -56,7 +56,7 @@ do
 		apache
 		;;
 		m)
-		mysql
+		mysqlfunction
 		;;
 		M)
 		mail
