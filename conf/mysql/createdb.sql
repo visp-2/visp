@@ -1,7 +1,6 @@
 use mysql
 GRANT ALL PRIVILEGES ON *.* TO 'adminmysql'@localhost IDENTIFIED BY 'mot2passe' WITH GRANT OPTION;
 FLUSH PRIVILEGES;
-drop database lxc;
 create database lxc;
 GRANT ALL PRIVILEGES ON lxc.* TO 'moderator'@172.16.1.254 identified by 'test1234=';
 use lxc
