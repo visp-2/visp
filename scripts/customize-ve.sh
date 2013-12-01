@@ -23,7 +23,7 @@ function mysqlfunction() {
 	aptitude install -y mysql-server > /dev/null 2>&1
 	sed -i "s/127.0.0.1/0.0.0.0/g" /etc/mysql/my.cnf	
 	service mysql restart
-	mysql -u root < /root/mysql/db.sql
+	mysql -u root < /root/mysql/createdb.sql
 }
 
 function mail() {
