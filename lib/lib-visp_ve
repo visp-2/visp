@@ -29,6 +29,7 @@ function createVe(){
 
 		# On transfert les fichiers de conf dans le VE pour qu'ils
 		# soient utilisé dans le script customize-ve.sh
+		sleep 3
 		scp -r -q -o StrictHostKeyChecking=no -i /etc/lxc/ssh/id_rsa-lxc ./conf/$i/ root@172.16.1.$cpt:/root
 
 		echo 1 > /proc/sys/net/ipv4/ip_forward
