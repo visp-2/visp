@@ -1,6 +1,6 @@
 <VirtualHost *:443>
 ServerName SERVERNAME
-DocumentRoot /var/www
+DocumentRoot /var/www/DIR
 
 SSLCertificateFile    /etc/apache2/ssl/server.crt
 SSLCertificateKeyFile /etc/apache2/ssl/server.key

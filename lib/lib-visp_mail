@@ -47,10 +47,26 @@ function createAlias() {
 }
 
 function deleteEmail() {
-	echo todo
+	mail=$1
+	domain=$2
+	mailbox=/home/$domain/$(echo $mail | cut -d \@ -f 1)/
+
+	rootfs=/var/lib/lxc/mail/rootfs
+	
+	mailExist=$(/usr/bin/mysql -u moderator -ptest1234= -h 172.16.1.4 lxc -e "SELECT * FROM users WHERE mail=\"$mail\"")
+
+	if [ ! -z "$mailExist" ]
+	then
+		rm -rf $rootfs/home/$domain/$mail
+		/usr/bin/mysql -u moderator -ptest1234= -h 172.16.1.4 lxc -e "DELETE FROM users WHERE mail=\"$mail\""
+	fi
 }
 
 function deleteAlias() {
+	echo todo
+}
+
+function deleteDomain() {
 	echo todo
 }
 

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 . /opt/visp/lib/lib-visp_domain
 . /opt/visp/lib/lib-visp_mail
@@ -192,6 +192,8 @@ then
 	then
 		echo "suppression d'une adresse mail ($mail) pour le domain $domain"
 		ready
+. /opt/visp/lib/lib-visp_mail
+		deleteEmail $mail $domain
 	elif [ ! -z "$domain" ] && [ ! -z "$alias" ]
 	then
 		echo "suppression d'un alias $alias vers l'adresse $maildrop"

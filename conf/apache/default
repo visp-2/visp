@@ -1,7 +1,7 @@
 <NameVirtualHost *:80>
 ServerName SERVERNAME
-DocumentRoot /var/www/
-	<Directory /var/www/>
+DocumentRoot /var/www/DIR
+	<Directory /var/www/DIR>
 		Options Indexes FollowSymLinks MultiViews
 		AllowOverride None
 		Order allow,deny
