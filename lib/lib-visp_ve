@@ -2,6 +2,17 @@ function execSsh() {
 	ssh -q -o StrictHostKeyChecking=no -i /etc/lxc/ssh/id_rsa-lxc root@172.16.1.$2 "$1"
 }
  
+function testSSH() {
+	ip=$1
+	./script/check_ssh -H $ip
+	
+	if [ $? -eq 0 ]
+	then
+		ssh=ok
+	else
+		ssh=nok
+	fi
+}
 
 function createVe(){
 
@@ -29,7 +40,18 @@ function createVe(){
 
 		# On transfert les fichiers de conf dans le VE pour qu'ils
 		# soient utilisé dans le script customize-ve.sh
-		sleep 3
+		for i in `seq 1 30`
+		do
+			testSSH 172.16.1.$cpt
+			if [ "$ssh" == "ok" ]
+			then
+				break
+			fi
+			sleep 1
+		done
+
+
+
 		scp -r -q -o StrictHostKeyChecking=no -i /etc/lxc/ssh/id_rsa-lxc ./conf/$i/ root@172.16.1.$cpt:/root
 
 		echo 1 > /proc/sys/net/ipv4/ip_forward
