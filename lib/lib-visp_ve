@@ -4,7 +4,7 @@ function execSsh() {
  
 function testSSH() {
 	ip=$1
-	./script/check_ssh -H $ip
+	./scripts/check_ssh -H $ip
 	
 	if [ $? -eq 0 ]
 	then
