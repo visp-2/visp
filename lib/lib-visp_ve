@@ -40,7 +40,7 @@ function createVe(){
 
 		# On transfert les fichiers de conf dans le VE pour qu'ils
 		# soient utilisé dans le script customize-ve.sh
-		for i in `seq 1 30`
+		for y in `seq 1 30`
 		do
 			testSSH 172.16.1.$cpt
 			if [ "$ssh" == "ok" ]
